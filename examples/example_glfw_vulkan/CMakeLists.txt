@@ -10,11 +10,14 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
 endif()
 
+set(CMAKE_CXX_STANDARD 11)
 set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DVK_PROTOTYPES")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_PROTOTYPES")
 
 # GLFW
-set(GLFW_DIR ../../../glfw) # Set this to point to an up-to-date GLFW repo
+if(NOT GLFW_DIR)
+   set(GLFW_DIR ../../../glfw) # Set this to point to an up-to-date GLFW repo
+endif()
 option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
 option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
 option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
@@ -25,7 +28,7 @@ include_directories(${GLFW_DIR}/include)
 
 # Dear ImGui
 set(IMGUI_DIR ../../)
-include_directories(${IMGUI_DIR} ..)
+include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends ..)
 
 # Libraries
 find_package(Vulkan REQUIRED)
@@ -39,5 +42,6 @@ include_directories(${GLFW_DIR}/deps)
 
 file(GLOB sources *.cpp)
 
-add_executable(example_glfw_vulkan ${sources} ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp ${IMGUI_DIR}/backends/imgui_impl_vulkan.cpp ${IMGUI_DIR}/imgui.cpp ${IMGUI_DIR}/imgui_draw.cpp ${IMGUI_DIR}/imgui_demo.cpp ${IMGUI_DIR}/imgui_widgets.cpp)
+add_executable(example_glfw_vulkan ${sources} ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp ${IMGUI_DIR}/backends/imgui_impl_vulkan.cpp ${IMGUI_DIR}/imgui.cpp ${IMGUI_DIR}/imgui_draw.cpp ${IMGUI_DIR}/imgui_demo.cpp ${IMGUI_DIR}/imgui_tables.cpp ${IMGUI_DIR}/imgui_widgets.cpp)
 target_link_libraries(example_glfw_vulkan ${LIBRARIES})
+
