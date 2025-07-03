@@ -56,6 +56,8 @@
 // Vulkan includes
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
 #include <volk.h>
+#elif IMGUI_IMPL_VULKAN_USE_GLAD
+#include <glad/vulkan.h>
 #else
 #include <vulkan/vulkan.h>
 #endif

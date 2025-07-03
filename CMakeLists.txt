@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(imgui-dear VERSION 1.1.3 LANGUAGES CXX)
-set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
 
 include(GNUInstallDirs)
 
@@ -28,31 +28,27 @@ file(GLOB BACKEND_INLINE ${BACKEND_HDR_DIR}/*.hpp)
 file(GLOB ROOT_SOURCE_RELATIVE RELATIVE ${SRC_DIR} ${SRC_DIR}/*.cpp)
 set(TARGET_SOURCES ${ROOT_SOURCE_RELATIVE})
 
-if(${IMGUI_GLFW})
+if (${IMGUI_GLFW})
     list(APPEND TARGET_SOURCES backends/imgui_impl_glfw.cpp)
-endif()
+endif ()
 
-if(${IMGUI_OPENGL})
+if (${IMGUI_OPENGL})
     list(APPEND TARGET_SOURCES backends/imgui_impl_opengl3.cpp)
-endif()
+endif ()
 
-if(${IMGUI_VULKAN})
+if (${IMGUI_VULKAN})
     list(APPEND TARGET_SOURCES backends/imgui_impl_vulkan.cpp)
-endif()
+endif ()
 
-add_library(imgui INTERFACE)
+add_library(imgui OBJECT ${TARGET_SOURCES})
 
-target_include_directories(imgui INTERFACE
+target_include_directories(imgui PUBLIC
         $<BUILD_INTERFACE:${HDR_DIR}>
         $<INSTALL_INTERFACE:include>)
 
-target_sources(imgui INTERFACE
-        $<BUILD_INTERFACE: ${TARGET_SOURCES}>
-        $<INSTALL_INTERFACE:${SRC_INSTALL_DIR}>)
-
 option(IMGUI_INSTALL "Generate installation target" OFF)
 
-if(IMGUI_INSTALL)
+if (IMGUI_INSTALL)
     set(version_config "${CMAKE_CURRENT_BINARY_DIR}/imguiConfigVersion.cmake")
     set(project_config "${CMAKE_CURRENT_BINARY_DIR}/imguiConfig.cmake")
     set(targets_export_name "imguiTargets")
@@ -96,4 +92,4 @@ if(IMGUI_INSTALL)
             EXPORT "${targets_export_name}"
             NAMESPACE "${namespace}"
             DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/imgui)
-endif()
+endif ()
