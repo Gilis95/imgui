@@ -3,10 +3,7 @@ project(imgui-dear VERSION 1.1.3 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 include(GNUInstallDirs)
-
-option(IMGUI_GLFW "Compile ImGui with GLFW window creation lib." OFF)
-option(IMGUI_OPENGL "Compile ImGui with opengl graphic API." OFF)
-option(IMGUI_VULKAN "Compile ImGui with Vulkan graphic API" OFF)
+include(CMakeOptions.cmake)
 
 set(HDR_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -40,11 +37,15 @@ if (${IMGUI_VULKAN})
     list(APPEND TARGET_SOURCES backends/imgui_impl_vulkan.cpp)
 endif ()
 
-add_library(imgui OBJECT ${TARGET_SOURCES})
+add_library(imgui INTERFACE)
 
-target_include_directories(imgui PUBLIC
+target_include_directories(imgui INTERFACE
         $<BUILD_INTERFACE:${HDR_DIR}>
         $<INSTALL_INTERFACE:include>)
+
+target_sources(imgui INTERFACE
+        $<BUILD_INTERFACE: ${TARGET_SOURCES}>
+        $<INSTALL_INTERFACE:${SRC_INSTALL_DIR}>)
 
 option(IMGUI_INSTALL "Generate installation target" OFF)
 
